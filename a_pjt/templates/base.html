@@ -34,13 +34,10 @@
             <ul class="navbar-nav">
               {% if request.user.is_authenticated%}
                 <li class="nav-item">
-                  <a href="{% url 'accounts:index' %}" class="nav-link">유저 목록</a>
-                </li>
-                <li class="nav-item">
-                  {% comment %} <a href="{% url 'reviews:create' %}" class="nav-link">작성</a> {% endcomment %}
+                  <a href="{% url 'reviews:index' %}" class="nav-link">게시판</a>
                 </li>
                 <li>
-                  <a href="{% url 'accounts:profile'  %}" class='nav-link'>{{request.user}}</a>
+                  <a href="{% url 'accounts:profile'  %}" class='nav-link'>내 프로필 바로 가기</a>
                 </li>
                 <li class="nav-item">
                   <a class='nav-link' href="{% url 'accounts:logout' %}">

@@ -115,6 +115,7 @@ def profile(request):
     return render(request, "accounts/profile.html", context)
 
 
+@login_required
 def profile_update(request):
     user_ = get_user_model().objects.get(pk=request.user.pk)  # 로그인한 유저 정보
     current_user = user_.profile_set.all()[0]  # 그 유저의 프로필
