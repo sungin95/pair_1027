@@ -6,6 +6,18 @@
 
 {% comment %} body {% endcomment %}
 {% block content %}
+  {% comment %} <form action="{% url 'reviews:like' review.pk %}" method="POST">
+    {% csrf_token %}
+    {% if request.user.is_authenticated %}
+      {% if request.user in review.like_users.all %}
+        {% bootstrap_button buton_type="submit" content="좋아요 취소" %}
+      {% else %}
+        {% bootstrap_button buton_type="submit" content="좋아요" %}
+      {% endif %}
+    {% else %}
+      {% bootstrap_button buton_type="submit" content="로그인이 필요" %}
+    {% endif %}
+  </form> {% endcomment %}
 <h1 class='text-center my-3'>리뷰 정보조회</h1>
   <h3>{{ review.title }}</h3>
 <hr>
@@ -40,6 +52,5 @@
   {% empty %}
   <p>no comment....</p>
   {% endfor %}
-
 {% endblock content %}
 

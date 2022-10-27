@@ -22,6 +22,14 @@ def detail(request, review_pk):
     }
     return render(request, 'reviews/detail.html',context)
 
+# @login_required
+# def like(request,review_pk):
+#     review = Review.objects.get(pk=review_pk)
+#     if review.like_users.filter(pk=request.user.pk).exists():
+#         review.like_users.remove(request.user)
+#     else:
+#         review.like_users.add(request.user)
+#     return redirect("reviews:detail")
 
 def comment_create(request, pk):
     review = Review.objects.get(pk=pk)
@@ -38,7 +46,7 @@ def comment_delete(request, review_pk, comment_pk):
     comment.delete()
     return redirect('reviews:detail', review_pk)
 
-# @login_required
+@login_required
 def create(request):
     if request.method == "POST":
         form = Reviewform(request.POST)
