@@ -3,6 +3,13 @@ from .models import Review
 from .forms import Commentform
 # Create your views here.
 
+def index(request):
+    reviews = Review.objects.order_by('-pk')
+    context = {
+        'reviews':reviews
+    }
+    return render(request, 'reviews/index.html', context)
+
 def detail(request, review_pk):
     review = Review.objects.get(pk=review_pk)
     commet_form = Commentform()
@@ -12,6 +19,9 @@ def detail(request, review_pk):
         'comments':review.commet_set.all(),
     }
     return render(request, 'reviews/detail.html',context)
+
+def create(requsest):
+    pass
 
 def comment_create(request, pk):
     review = Review.objects.get(pk=pk)
@@ -23,8 +33,8 @@ def comment_create(request, pk):
         comment.save()
     return redirect('reviews:detail', review.pk )
 
-def comment_delete(request, article_pk, comment_pk):
+def comment_delete(request, review_pk, comment_pk):
     comment = Commentform.objects.get(pk=comment_pk)
     comment.delete()
-    return redirect('reviews:detail', article_pk)
+    return redirect('reviews:detail', review_pk)
 
