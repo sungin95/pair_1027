@@ -21,10 +21,17 @@
 <h1 class='text-center my-3'>리뷰 정보조회</h1>
   <h3>{{ review.title }}</h3>
 <hr>
+<p>영화제목 : {{ review.movie_name }}</p>
+<br>
 <p>내용 : {{ review.content }}</p>
+<br>
 <p>평점 : {{ review.grade }}</p>
 <hr>
-<a class='btn btn-dark my-3' href="{% url 'reviews:update' review.pk %}">수정하기</a>
+{% if request.user == review.user %}
+  <a class='btn btn-dark my-3' href="{% url 'reviews:update' review.pk %}">수정하기</a>
+  <a class='btn btn-dark my-3' href="{% url 'reviews:delete' review.pk %}">삭제하기</a>
+
+{% endif %}
 <hr>
 {% if request.user.is_authenticated %}
   <div>
@@ -45,7 +52,9 @@
   <div class='text-end'>
     <form action="{% url 'reviews:comment_delete' review.pk comment.pk %}" method="POST">
         {% csrf_token %}
-        <input type="submit" class='btn btn-dark' value='삭제'>
+        {% if request.user == comment.user %}
+          <input type="submit" class='btn btn-dark' value='삭제'>
+        {%  endif %}
     </form>
   </div>
   <hr>

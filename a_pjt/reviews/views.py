@@ -43,7 +43,8 @@ def comment_create(request, pk):
 
 def comment_delete(request, review_pk, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)
-    comment.delete()
+    if request.user == comment.user:
+        comment.delete()
     return redirect('reviews:detail', review_pk)
 
 @login_required
@@ -65,15 +66,23 @@ def create(request):
 @login_required
 def update(request, pk):
     reviews = Review.objects.get(pk=pk)
-    if request.method == "POST":
-        form = Reviewform(request.POST, request.FILES, instance=reviews)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '글 수정을 완료 했습니다.')
-            return redirect('reviews:detail', reviews.pk)
-    else:
-        form = Reviewform(instance=reviews)
-    context = {
-        'form': form
-    }
-    return render(request, 'reviews/update.html', context)
+    if request.user == reviews.user:
+        if request.method == "POST":
+            form = Reviewform(request.POST, request.FILES, instance=reviews)
+            if form.is_valid():
+                form.save()
+                messages.success(request, '글 수정을 완료 했습니다.')
+                return redirect('reviews:detail', reviews.pk)
+        else:
+            form = Reviewform(instance=reviews)
+        context = {
+            'form': form
+        }
+        return render(request, 'reviews/update.html', context)
+
+
+def delete(request, pk):
+    reviews = Review.objects.get(pk=pk)
+    if request.user == reviews.user:
+        reviews.delete()
+    return redirect('reviews:index')
