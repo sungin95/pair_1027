@@ -12,3 +12,4 @@ class Commetform(forms.ModelForm):
     class meta:
         model= Comment
         fields= ['content'] 
+
