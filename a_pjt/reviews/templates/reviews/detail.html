@@ -6,7 +6,40 @@
 
 {% comment %} body {% endcomment %}
 {% block content %}
-<h1>리뷰 정보조회</h1>
-  <p>{{ review.title }}</p>
+<h1 class='text-center my-3'>리뷰 정보조회</h1>
+  <h3>{{ review.title }}</h3>
+<hr>
+<p>내용 : {{ review.content }}</p>
+<p>평점 : {{ review.grade }}</p>
+<hr>
+<a class='btn btn-dark my-3' href="{% url 'reviews:update' review.pk %}">수정하기</a>
+<hr>
+{% if request.user.is_authenticated %}
+  <div>
+    <form action="{% url 'reviews:comment_create' review.pk %}" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form comment_form layout='inline'%}
+        <input type="submit" class='btn btn-dark mt-2' value='댓글달기'>
+    </form>
+  </div>
+  {% endif %}
+  <h3 class='mt-4'>댓글</h3>
+  {% if comments %}
+    <p><b>{{comments|length }}개의 댓글이 있습니다.</b></p>
+  {% endif %}
+  <hr>
+  {% for comment in review.comment_set.all %}
+    <p class=''>{{ comment.user.username }} | {{ comment.content }}</p>
+  <div class='text-end'>
+    <form action="{% url 'reviews:comment_delete' review.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class='btn btn-dark' value='삭제'>
+    </form>
+  </div>
+  <hr>
+  {% empty %}
+  <p>no comment....</p>
+  {% endfor %}
+
 {% endblock content %}
 
