@@ -1,8 +1,15 @@
+from dataclasses import fields
+from .models import Review, Comment
 from django import forms
-from .models import Comment
 
-class CommentForm(forms.ModelForm):
+class Reviewform(forms.ModelForm):
+    class meta:
+        model= Review
+        fields= ['title','content','movie_name','grade',] 
 
-    class Meta:
-        model = Comment
-        fields = ('content',)
+
+class Commetform(forms.ModelForm):
+    class meta:
+        model= Comment
+        fields= ['content'] 
+
