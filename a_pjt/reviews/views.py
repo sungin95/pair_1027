@@ -17,12 +17,17 @@ def detail(request, review_pk):
     context={
         'review':review,
         'comment_form':commet_form,
-        'comments':review.commet_set.all(),
+        'comments':review.comment_set.all(),
     }
     return render(request, 'reviews/detail.html',context)
-
-def create(requsest):
-    pass
+# @login_required
+# def like(request,review_pk):
+#     review = Review.objects.get(pk=review_pk)
+#     if review.like_users.filter(pk=request.user.pk).exists():
+#         review.like_users.remove(request.user)
+#     else:
+#         review.like_users.add(request.user)
+#     return redirect("reviews:detail")
 
 def comment_create(request, pk):
     review = Review.objects.get(pk=pk)
@@ -39,7 +44,7 @@ def comment_delete(request, review_pk, comment_pk):
     comment.delete()
     return redirect('reviews:detail', review_pk)
 
-# @login_required
+@login_required
 def create(request):
     if request.method == "POST":
         form = Reviewform(request.POST)
@@ -47,7 +52,7 @@ def create(request):
             review = form.save(commit=False)
             review.user = request.user
             review.save()
-        return redirect('reviews:create')
+        return redirect('reviews:index')
     else:
         form = Reviewform()
     context={

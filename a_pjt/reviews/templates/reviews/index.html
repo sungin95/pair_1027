@@ -24,6 +24,6 @@
     </tbody>
   </table>
   {% if request.user.is_authenticated %}
-    <a class='btn btn-dark' href="">글쓰기</a>
+    <a class='btn btn-dark' href="{% url 'reviews:create' %}">글쓰기</a>
   {% endif %}
 {% endblock content %}
