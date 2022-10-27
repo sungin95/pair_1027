@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Review
+from .models import Review, Comment
 from .forms import Commentform,Reviewform
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
@@ -20,6 +21,7 @@ def detail(request, review_pk):
         'comments':review.comment_set.all(),
     }
     return render(request, 'reviews/detail.html',context)
+
 # @login_required
 # def like(request,review_pk):
 #     review = Review.objects.get(pk=review_pk)
@@ -40,7 +42,7 @@ def comment_create(request, pk):
     return redirect('reviews:detail', review.pk )
 
 def comment_delete(request, review_pk, comment_pk):
-    comment = Commentform.objects.get(pk=comment_pk)
+    comment = Comment.objects.get(pk=comment_pk)
     comment.delete()
     return redirect('reviews:detail', review_pk)
 
@@ -59,3 +61,19 @@ def create(request):
         'form':form
     }
     return render(request, 'reviews/create.html',context)
+
+@login_required
+def update(request, pk):
+    reviews = Review.objects.get(pk=pk)
+    if request.method == "POST":
+        form = Reviewform(request.POST, request.FILES, instance=reviews)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '글 수정을 완료 했습니다.')
+            return redirect('reviews:detail', reviews.pk)
+    else:
+        form = Reviewform(instance=reviews)
+    context = {
+        'form': form
+    }
+    return render(request, 'reviews/update.html', context)

@@ -13,4 +13,6 @@ urlpatterns = [
     path("delete/", views.delete, name="user_delete"),
     path("update/", views.update, name="update"),
     path("password/", views.change_password, name="change_password"),
+    path("profile/", views.profile, name="profile"),
+    path("profile/update/", views.profile_update, name="profile_update"),
 ]
