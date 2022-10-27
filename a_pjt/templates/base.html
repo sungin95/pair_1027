@@ -37,10 +37,10 @@
                   <a href="{% url 'accounts:index' %}" class="nav-link">유저 목록</a>
                 </li>
                 <li class="nav-item">
-                  <a href="{% url 'reviews:create' %}" class="nav-link">작성</a>
+                  {% comment %} <a href="{% url 'reviews:create' %}" class="nav-link">작성</a> {% endcomment %}
                 </li>
                 <li>
-                  <a href="{% url 'accounts:profile'  %}" class='nav-link'>{{request.user}}</a>
+                  {% comment %} <a href="{% url 'accounts:profile'  %}" class='nav-link'>{{request.user}}</a> {% endcomment %}
                 </li>
                 <li class="nav-item">
                   <a class='nav-link' href="{% url 'accounts:logout' %}">
