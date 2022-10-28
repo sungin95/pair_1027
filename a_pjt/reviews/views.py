@@ -51,7 +51,8 @@ def comment_create(request, pk):
         comment.save()
         context = {
             'comment': comment.content,
-            'userName': comment.user.username
+            'userName': comment.user.username,
+            'commentPk': comment.pk,
         }
         return JsonResponse(context)
     

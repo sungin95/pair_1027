@@ -47,20 +47,21 @@
   {% endif %}
   <hr>
   {% for comment in review.comment_set.all %}
-    <p class=''>{{ comment.user.username }} | {{ comment.content }}</p>
+  <p class=''>{{ comment.user.username }} | {{ comment.content }}</p>
   <div class='text-end'>
     <form action="{% url 'reviews:comment_delete' review.pk comment.pk %}" method="POST">
-        {% csrf_token %}
-        {% if request.user == comment.user %}
-          <input type="submit" class='btn btn-dark' value='삭제'>
-        {%  endif %}
+      {% csrf_token %}
+      {% if request.user == comment.user %}
+      <input type="submit" class='btn btn-dark' value='삭제'>
+      {%  endif %}
     </form>
   </div>
   <hr>
   {% empty %}
   <p>no comment....</p>
   {% endfor %}
-{% endblock content %}
+  <div id='comment-create'></div>
+  {% endblock content %}
 
 {% block script %}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -101,6 +102,17 @@
         headers: {'X-CSRFToken': csrftoken,},
         data: new FormData(commentAdd),
       })
+        .then((response) => {
+          const comments = document.querySelector('#comment-create')
+          comments.insertAdjacentHTML('beforeEnd', `
+          <p>${ response.data.userName } | ${ response.data.comment }</p>
+          <form action="/reviews/${ reviewId }/comments/${ response.data.commentPk }/comment_delete/" method="POST" data-comment-id=${ response.data.commentPk }>
+            {% csrf_token %}
+            <input type="submit" class='btn btn-dark' value='삭제'>
+          </form>
+          <hr>`)
+          commentAdd.reset()
+        })
       console.log('123')
     })
 </script>
