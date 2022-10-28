@@ -49,8 +49,12 @@ def comment_create(request, pk):
         comment.review = review
         comment.user = request.user
         comment.save()
-    return redirect("reviews:detail", review.pk)
-
+        context = {
+            'comment': comment.content,
+            'userName': comment.user.username
+        }
+        return JsonResponse(context)
+    
 
 def comment_delete(request, review_pk, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)

@@ -34,7 +34,7 @@
   <hr>
 {% if request.user.is_authenticated %}
   <div>
-    <form action="{% url 'reviews:comment_create' review.pk %}" method="POST">
+    <form method="POST" id='comment-add' data-review-id="{{ review.pk }}">
         {% csrf_token %}
         {% bootstrap_form comment_form layout='inline'%}
         <input type="submit" class='btn btn-dark mt-2' value='댓글달기'>
@@ -88,8 +88,20 @@
             }
             likeCount.innerText = response.data.liketCount
             console.log(is_like)
-          })
-        
+          })   
+    })
+    {% comment %} 댓글 비동기 연결 {% endcomment %}
+    const commentAdd = document.querySelector('#comment-add')
+    commentAdd.addEventListener('submit', function(event) {
+      event.preventDefault()
+      const reviewId = event.target.dataset.reviewId
+      axios({
+        method: "post",
+        url: `/reviews/${ reviewId }/comments/`,
+        headers: {'X-CSRFToken': csrftoken,},
+        data: new FormData(commentAdd),
+      })
+      console.log('123')
     })
 </script>
 {% endblock script %}
