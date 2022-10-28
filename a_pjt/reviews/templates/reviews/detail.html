@@ -106,7 +106,7 @@
           const comments = document.querySelector('#comment-create')
           comments.insertAdjacentHTML('beforeEnd', `
           <p>${ response.data.userName } | ${ response.data.comment }</p>
-          <form action="/reviews/${ reviewId }/comments/${ response.data.commentPk }/comment_delete/" method="POST" data-comment-id=${ response.data.commentPk }>
+          <form class='text-end' action="/reviews/${ reviewId }/comments/${ response.data.commentPk }/comment_delete/" method="POST" data-comment-id=${ response.data.commentPk }>
             {% csrf_token %}
             <input type="submit" class='btn btn-dark' value='삭제'>
           </form>
