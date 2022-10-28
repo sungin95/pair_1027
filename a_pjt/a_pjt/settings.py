@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # .env 파일에서 환경 변수를 불러옵니다.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-jgk03h=4th3*v@)0wn=qqz3_9tvel^9x%4pg#f9e8e71z(82&a"
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# 기존 SECRET_KEY 대신 사용합니다.
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", ".herokuapp.com"]
 
 # Application definition
 
@@ -45,6 +51,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -84,6 +91,10 @@ DATABASES = {
     }
 }
 
+import dj_database_url
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES["default"].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -122,6 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
