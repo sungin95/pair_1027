@@ -3,6 +3,7 @@ from .models import Review, Comment
 from .forms import CommentForm, ReviewForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -29,9 +30,15 @@ def like(request, review_pk):
     review = Review.objects.get(pk=review_pk)
     if review.like.filter(pk=request.user.pk).exists():
         review.like.remove(request.user)
+        is_like = False
     else:
         review.like.add(request.user)
-    return redirect("reviews:detail", review.pk)
+        is_like = True
+    context={
+        'is_like':is_like,
+        'liketCount': review.like.count(),
+    }
+    return JsonResponse(context)
 
 
 def comment_create(request, pk):

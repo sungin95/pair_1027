@@ -24,15 +24,12 @@
 <form id="like-form" method="POST" data-review-id="{{ review.pk }}">
     {% csrf_token %}
     {% if request.user.is_authenticated %}
-    {% if request.user in review.like.all %}
-    {% bootstrap_button buton_type="submit" content="좋아요 취소" %}
-    {% else %}
-    {% bootstrap_button buton_type="submit" content="좋아요" %}
-    {% endif %}
+    <input type="submit" class="btn btn-dark" value="좋아요">
+    {% comment %} {% bootstrap_button buton_type="submit" content="좋아요" %} {% endcomment %}
     {% else %}
     {% bootstrap_button buton_type="submit" content="로그인이 필요" %}
     {% endif %}
-    <span class="mx-3">{{review.like.count}}</span>
+    <span class="mx-3" id="like-count">{{review.like.count}}</span>
 </form>
   <hr>
 {% if request.user.is_authenticated %}
@@ -79,7 +76,19 @@
             url: `/reviews/${ reviewId }/like/`,
             headers: {'X-CSRFToken': csrftoken,},
         })
-        console.log("123")
+          .then((response)=> {
+            const likeCount = document.querySelector('#like-count')
+            const is_like = response.data.is_like
+            const likeBtn = document.querySelector('#like-form > input[type=submit]')
+            if (is_like === true){
+              likeBtn.value = '좋아요 취소'
+
+            }else{
+              likeBtn.value = '좋아요'
+            }
+            likeCount.innerText = response.data.liketCount
+            console.log(is_like)
+          })
         
     })
 </script>
