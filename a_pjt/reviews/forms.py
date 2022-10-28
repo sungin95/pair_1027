@@ -1,15 +1,19 @@
-
 from .models import Review, Comment
 from django import forms
 
-class Reviewform(forms.ModelForm):
+
+class ReviewForm(forms.ModelForm):
     class Meta:
-        model= Review
-        fields= ['title','content','movie_name','grade',] 
+        model = Review
+        fields = [
+            "title",
+            "content",
+            "movie_name",
+            "grade",
+        ]
 
 
-class Commentform(forms.ModelForm):
+class CommentForm(forms.ModelForm):
     class Meta:
-        model= Comment
-        fields= ['content'] 
-
+        model = Comment
+        fields = ["content"]
